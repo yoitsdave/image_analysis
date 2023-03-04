@@ -1,12 +1,14 @@
 import os
-import numpy as np
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from tensorflow.keras.applications.resnet50 import ResNet50
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
 from .forms import ImageForm, ImageSegmentationForm
 from .models import Image, ImageSegmentation
+
+# import numpy as np
+# from django.shortcuts import render, redirect
+# from django.contrib.auth.decorators import login_required
+# from tensorflow.keras.applications.resnet50 import ResNet50
+# from tensorflow.keras.preprocessing import image
+# from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
+
 
 @login_required
 def home(request):
@@ -126,15 +128,18 @@ def score_classifier(request):
     image_urls = [os.path.join("/", "images", os.path.basename(image.img.path)) for image in all_images]
 
 
-    model = ResNet50(weights='imagenet')
+    # model = ResNet50(weights='imagenet')
     labels = []
     for uploaded_image in all_images:
-        img = image.load_img(uploaded_image.img.path, target_size=(224, 224))
-        x = image.img_to_array(img)
-        x = np.expand_dims(x, axis=0)
-        x = preprocess_input(x)
-        preds = model.predict(x)
-        label = decode_predictions(preds, top=1)[0][0][1]
+        # img = image.load_img(uploaded_image.img.path, target_size=(224, 224))
+        # x = image.img_to_array(img)
+        # x = np.expand_dims(x, axis=0)
+        # x = preprocess_input(x)
+        # preds = model.predict(x)
+        # label = decode_predictions(preds, top=1)[0][0][1]
+
+        label = "sample_label"
+
         labels.append(label)
 
 
