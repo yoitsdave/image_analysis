@@ -1,10 +1,10 @@
 import os
 from .forms import ImageForm, ImageSegmentationForm
 from .models import Image, ImageSegmentation
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 # import numpy as np
-# from django.shortcuts import render, redirect
-# from django.contrib.auth.decorators import login_required
 # from tensorflow.keras.applications.resnet50 import ResNet50
 # from tensorflow.keras.preprocessing import image
 # from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
