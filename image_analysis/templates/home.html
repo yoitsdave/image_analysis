@@ -1,0 +1,14 @@
+{% load account %}
+
+Hi {% user_display user %}!
+<br> <br>
+{{ images_msg }} <a href="upload"> {{ images_link_text }} </a>
+<br> <br>
+{{ segment_msg }} <a href={{segment_link}}> {{ segment_link_text }} </a>
+<br> <br>
+{{ classifier_msg }} <a href="score_classifier"> {{ classifier_link_text }} </a>
+<br> <br> <br> <br>
+
+<footer> 
+<a href="accounts/logout"> Sign Out </a>
+</footer>

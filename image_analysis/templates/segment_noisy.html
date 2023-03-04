@@ -1,0 +1,29 @@
+<img id="img" src="{{ image_url }}" hidden="true" >
+
+<canvas id="mainCanvas" style="padding: 0;
+display: block;
+margin: 0 auto;
+height: 60%;
+width: 60%;"></canvas>
+
+<div style="text-align: center;">
+    <button id="greenBrushButton" style="color:green"> {{label}} </button>
+    <button id="redBrushButton" style="color:red"> NOT {{label}} </button>
+</div>
+
+<div style="text-align: center;">
+    Small Brush <input type="range" min="1" max="100" value="50" id="brushSizeSlider"> Large Brush
+</div>
+
+<div style="text-align: center;">
+    <button id="nextButton"> Submit </button>
+</div>
+
+<form hidden="true" id="form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload</button>
+</form>
+
+
+<script src="/js/segment_noisy.js"> </script>

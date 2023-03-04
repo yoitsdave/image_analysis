@@ -1,0 +1,26 @@
+{% for index, label, url in image_data %}
+
+<div id="img{{index}}" style="text-align: center;" hidden=true>
+    <img  src="{{url}}" alt="{{label}}" style="padding: 0;
+margin: 0 auto;
+height: 60%;
+width: 60%;">
+    <br>
+    <span> Computer labels this: "{{label}}". Do you agree? </span>
+</div>
+
+{% endfor %}
+
+<div style="text-align: center;">
+    <button id="yesButton" style="color:green"> YES </button>
+    <button id="noButton" style="color:red"> NO </button>
+</div>
+
+<div style="text-align: center;" id="finalScore"> 
+</div>
+
+<div style="text-align: center;">
+    <a href="/" hidden="true" id="home"> Home </a>
+</div>
+
+<script src="/js/score.js"> </script>
