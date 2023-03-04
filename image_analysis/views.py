@@ -85,7 +85,7 @@ def segment_get_path_label_form(request, id):
     #TODO: check to see if image is owned by user - otherwise dont send page
 
     image = Image.objects.filter(id=id).first()
-    path = os.path.join("/", "images", os.path.basename(image.img.path))
+    path = os.path.join("/", "static", "images", os.path.basename(image.img.path))
     label = image.label
 
     if request.method == 'POST':
@@ -125,7 +125,7 @@ def segment_noisy(request, id):
 def score_classifier(request):
     user = request.user
     all_images = Image.objects.filter(owner=user).filter(active=True)
-    image_urls = [os.path.join("/", "images", os.path.basename(image.img.path)) for image in all_images]
+    image_urls = [os.path.join("/", "static", "images", os.path.basename(image.img.path)) for image in all_images]
 
 
     # model = ResNet50(weights='imagenet')
