@@ -2,4 +2,3 @@ django
 django-allauth
 Pillow
 python-dotenv
-whitenoise
