@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 # from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
 
 import torch
+from torchvision import transforms
+from PIL import Image as PILImage
 import numpy as np
 
 @login_required
@@ -122,7 +124,31 @@ def segment_noisy(request, id):
         return redirect('/')
     else:
         return render(request, 'segment_noisy.html', {"image_url": path, "label": label, "form": form})
-    
+
+
+def prepare_image(path):
+    img_transforms = transforms.Compose(
+        [transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor()]
+    )
+
+    img = PILImage.open(path)
+    if img.mode != "RGB":
+        img = img.convert("RGB")
+
+
+    img = img_transforms(img)
+    with torch.no_grad():
+        # mean and std are not multiplied by 255 as they are in training script
+        # torch dataloader reads data into bytes whereas loading directly
+        # through PIL creates a tensor with floats in [0,1] range
+        mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+        std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+        img = img.float()
+        input = img.unsqueeze(0).sub_(mean).div_(std)
+
+    return input
+
+
 @login_required
 def score_classifier(request):
     user = request.user
@@ -135,8 +161,12 @@ def score_classifier(request):
     utils = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_convnets_processing_utils')
     resnet50.eval().to(device)
 
+    img_transforms = transforms.Compose(
+        [transforms.Resize(256), transforms.CenterCrop(224), transforms.ToTensor()]
+    )
+
     batch = torch.cat(
-        [utils.prepare_input_from_uri(image.img.path) for image in all_images]
+        [prepare_image(image.img.path) for image in all_images]
     ).to(device)
 
     with torch.no_grad():

@@ -3,3 +3,4 @@ django-allauth
 Pillow
 python-dotenv
 torch
+validators
