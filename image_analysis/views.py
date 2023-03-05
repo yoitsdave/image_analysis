@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 # from tensorflow.keras.preprocessing import image
 # from tensorflow.keras.applications.resnet50 import preprocess_input, decode_predictions
 
+import torch
+import numpy as np
 
 @login_required
 def home(request):
@@ -128,20 +130,22 @@ def score_classifier(request):
     # image_urls = [os.path.join("/", "static", "images", os.path.basename(image.img.path)) for image in all_images]
     image_urls = [image.img.url for image in all_images]
 
-    # model = ResNet50(weights='imagenet')
+    device = torch.device("cpu")
+    resnet50 = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_resnet50', pretrained=True)
+    utils = torch.hub.load('NVIDIA/DeepLearningExamples:torchhub', 'nvidia_convnets_processing_utils')
+    resnet50.eval().to(device)
+
+    batch = torch.cat(
+        [utils.prepare_input_from_uri(image.img.path) for image in all_images]
+    ).to(device)
+
+    with torch.no_grad():
+        output = torch.nn.functional.softmax(resnet50(batch), dim=1)
+
+    results = utils.pick_n_best(predictions=output, n=1)
     labels = []
-    for uploaded_image in all_images:
-        # img = image.load_img(uploaded_image.img.path, target_size=(224, 224))
-        # x = image.img_to_array(img)
-        # x = np.expand_dims(x, axis=0)
-        # x = preprocess_input(x)
-        # preds = model.predict(x)
-        # label = decode_predictions(preds, top=1)[0][0][1]
-
-        label = "sample_label"
-
-        labels.append(label)
-
+    for i, uploaded_image in enumerate(all_images):
+        labels.append(results[i][0][0])
 
     indices = range(len(labels))
     image_data = zip(indices, labels, image_urls)

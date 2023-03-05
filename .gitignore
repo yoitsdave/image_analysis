@@ -1,6 +1,5 @@
 db.sqlite3
-images/*
-seg/*
 static/*
 media/*
 image_analysis/__pycache__/**
+LOC_synset_mapping.json
